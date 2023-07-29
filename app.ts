@@ -65,3 +65,32 @@ const arr1: readonly number[] = [1, 2, 3];
 
 const skills2: Array<string> = ["dev", "devops"];
 const skills3: ReadonlyArray<string> = ["dev", "devops"];
+
+// --------------------- UNION ----------------------------------------//
+
+function logIn(id: number | string | boolean) {
+  if (typeof id === "string") {
+    console.log(id.toLocaleUpperCase());
+  }
+  if (typeof id === "number") {
+    console.log(Number(id.toFixed(0)));
+  }
+  if (typeof id === "boolean") {
+    console.log(id);
+  }
+}
+
+logIn(123.23);
+logIn("string");
+logIn(true);
+
+// --------------- Literal Types ------------------- //
+
+function fetchWithAuth(url: string, method: "get" | "post"): 1 | -1 {
+  return -1;
+}
+
+fetchWithAuth("url", "get");
+fetchWithAuth("url", "post");
+
+const a = "1";

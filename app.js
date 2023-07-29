@@ -42,3 +42,25 @@ const arr1 = [1, 2, 3];
 // используем джинерик
 const skills2 = ["dev", "devops"];
 const skills3 = ["dev", "devops"];
+// --------------------- UNION ----------------------------------------//
+function logIn(id) {
+    if (typeof id === "string") {
+        console.log(id.toLocaleUpperCase());
+    }
+    if (typeof id === "number") {
+        console.log(Number(id.toFixed(0)));
+    }
+    if (typeof id === "boolean") {
+        console.log(id);
+    }
+}
+logIn(123.23);
+logIn("string");
+logIn(true);
+// --------------- Literal Types ------------------- //
+function fetchWithAuth(url, method) {
+    return -1;
+}
+fetchWithAuth("url", "get");
+fetchWithAuth("url", "post");
+const a = "1";
