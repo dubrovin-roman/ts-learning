@@ -94,3 +94,58 @@ fetchWithAuth("url", "get");
 fetchWithAuth("url", "post");
 
 const a = "1";
+
+// -------------------- Type Aliases -------------------- //
+
+type httpMethod = "get" | "post";
+
+function fetchWithAliase(url: string, method: httpMethod) {
+  console.log(url);
+  console.log(method);
+}
+
+fetchWithAliase("url", "post");
+
+type User = {
+  name: string;
+  age: number;
+  skills: string[];
+};
+
+type RoleA = {
+  id: number;
+};
+
+type UserWithRole = User & RoleA;
+
+const userA: UserWithRole = {
+  id: 777,
+  name: "Roman",
+  age: 37,
+  skills: ["dev", "devops"],
+};
+
+// ------------------ INTERFACE ----------------- //
+
+interface UserI {
+  name: string;
+  age: number;
+  skills: string[];
+  getBirthYear: () => number;
+}
+
+interface UserWithRoleI extends UserI {
+  roleId: number;
+  dateCreate: Date;
+}
+
+const user2: UserWithRoleI = {
+  roleId: 1,
+  dateCreate: new Date(),
+  name: "Roman",
+  age: 37,
+  skills: ["dev", "devops"],
+  getBirthYear() {
+    return (2023 - this.age)
+  }
+};

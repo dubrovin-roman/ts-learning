@@ -64,3 +64,24 @@ function fetchWithAuth(url, method) {
 fetchWithAuth("url", "get");
 fetchWithAuth("url", "post");
 const a = "1";
+function fetchWithAliase(url, method) {
+    console.log(url);
+    console.log(method);
+}
+fetchWithAliase("url", "post");
+const userA = {
+    id: 777,
+    name: "Roman",
+    age: 37,
+    skills: ["dev", "devops"],
+};
+const user2 = {
+    roleId: 1,
+    dateCreate: new Date(),
+    name: "Roman",
+    age: 37,
+    skills: ["dev", "devops"],
+    getBirthYear() {
+        return (2023 - this.age);
+    }
+};
