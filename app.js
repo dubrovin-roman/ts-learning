@@ -82,6 +82,80 @@ const user2 = {
     age: 37,
     skills: ["dev", "devops"],
     getBirthYear() {
-        return (2023 - this.age);
-    }
+        return 2023 - this.age;
+    },
 };
+// --------------------------- NEVER ----------------------- //
+function genereateError(message) {
+    throw new Error(message);
+}
+function dumpError() {
+    while (true) {
+        // .....
+    }
+}
+function rec() {
+    return rec();
+}
+function processAction(action) {
+    switch (action) {
+        case "refund":
+            // ....
+            break;
+        case "checkout":
+            // ...
+            break;
+        case "reject":
+            // ...
+            break;
+        default:
+            const _nev = action;
+            throw new Error(`Нет такого ${action}`);
+    }
+}
+function isString(data) {
+    if (typeof data === "string") {
+        return true;
+    }
+    else if (typeof data === "number") {
+        return false;
+    }
+    genereateError("передан некорректный тип данных");
+}
+// ------------------------ TYPE GUARD ---------------------- //
+function isStringTG(x) {
+    return typeof x === "string";
+}
+function logId(id) {
+    if (isStringTG(id)) {
+        console.log(id);
+    }
+}
+const usertg = {
+    name: "Roman",
+    email: "roman@yandex.ru",
+    login: "roman",
+};
+function isAdmin(user) {
+    return "role" in user;
+}
+function isAdminAlternative(user) {
+    return user.role !== undefined;
+}
+function setRoleZero(user) {
+    if (isAdmin(user)) {
+        user.role = 0;
+    }
+    else {
+        throw new Error("Пользователь не админ");
+    }
+}
+const ob = { name: "Иван" };
+assertUser(ob);
+ob.name = "Вася";
+function assertUser(obj) {
+    if (typeof obj === "object" && !!obj && "name" in obj) {
+        return;
+    }
+    throw new Error("Not USER");
+}

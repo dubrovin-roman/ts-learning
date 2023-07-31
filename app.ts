@@ -146,6 +146,112 @@ const user2: UserWithRoleI = {
   age: 37,
   skills: ["dev", "devops"],
   getBirthYear() {
-    return (2023 - this.age)
-  }
+    return 2023 - this.age;
+  },
 };
+// --------------------------- NEVER ----------------------- //
+
+function genereateError(message: string): never {
+  throw new Error(message);
+}
+
+function dumpError(): never {
+  while (true) {
+    // .....
+  }
+}
+
+function rec(): never {
+  return rec();
+}
+
+type paymentAction = "refund" | "checkout" | "reject";
+
+function processAction(action: paymentAction) {
+  switch (action) {
+    case "refund":
+      // ....
+      break;
+    case "checkout":
+      // ...
+      break;
+    case "reject":
+      // ...
+      break;
+    default:
+      const _nev: never = action;
+      throw new Error(`Нет такого ${action}`);
+  }
+}
+
+function isString(data: string | number): boolean {
+  if (typeof data === "string") {
+    return true;
+  } else if (typeof data === "number") {
+    return false;
+  }
+  genereateError("передан некорректный тип данных");
+}
+
+// ------------------------ TYPE GUARD ---------------------- //
+
+function isStringTG(x: string | number): x is string {
+  return typeof x === "string";
+}
+
+function logId(id: string | number) {
+  if (isStringTG(id)) {
+    console.log(id);
+  }
+}
+
+interface UserTG {
+  name: string;
+  email: string;
+  login: string;
+}
+
+interface Admin {
+  name: string;
+  role: number;
+}
+
+const usertg: UserTG = {
+  name: "Roman",
+  email: "roman@yandex.ru",
+  login: "roman",
+};
+
+function isAdmin(user: UserTG | Admin): user is Admin {
+  return "role" in user;
+}
+
+function isAdminAlternative(user: UserTG | Admin): user is Admin {
+  return (user as Admin).role !== undefined;
+}
+
+function setRoleZero(user: UserTG | Admin) {
+  if (isAdmin(user)) {
+    user.role = 0;
+  } else {
+    throw new Error("Пользователь не админ");
+  }
+}
+
+// ----------------- Asserts ------------------ //
+
+interface UserA {
+  name: string;
+}
+
+const ob = {name: "Иван"};
+
+assertUser(ob);
+ob.name = "Вася";
+
+function assertUser(obj: unknown): asserts obj is UserA {
+  if (typeof obj === "object" && !!obj && "name" in obj) {
+    return;
+  }
+  throw new Error("Not USER");
+}
