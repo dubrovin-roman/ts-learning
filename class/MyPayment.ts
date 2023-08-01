@@ -5,10 +5,10 @@ enum MyPaymentStatus {
 }
 
 class Payment {
-  id: number;
-  status: MyPaymentStatus = MyPaymentStatus.HOLDED;
-  createdAt: Date = new Date();
-  updatedAt: Date;
+  private id: number;
+  private status: MyPaymentStatus = MyPaymentStatus.HOLDED;
+  private createdAt: Date = new Date();
+  private updatedAt: Date;
 
   constructor(id: number) {
     this.id = id;
@@ -31,6 +31,7 @@ const payment = new Payment(1);
 setTimeout(() => {
   const lifeTime = payment.getPaymentLifeTime();
   console.log(lifeTime);
+  // payment.status = MyPaymentStatus.PROCESSED;
   payment.unholdPayment();
   console.log(payment);
 }, 1000);

@@ -25,6 +25,7 @@ const payment = new Payment(1);
 setTimeout(() => {
     const lifeTime = payment.getPaymentLifeTime();
     console.log(lifeTime);
+    // payment.status = MyPaymentStatus.PROCESSED;
     payment.unholdPayment();
     console.log(payment);
 }, 1000);

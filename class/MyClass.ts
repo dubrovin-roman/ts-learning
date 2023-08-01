@@ -1,6 +1,7 @@
 class MyUser {
   name: string = "default";
   age: number;
+  skills: string[];
 
   constructor();
   constructor(name: string);
@@ -11,6 +12,20 @@ class MyUser {
     if (typeof nameOrAge === "number") this.age = nameOrAge;
     if (typeof age === "number") this.age = age;
   }
+
+  addSkill(skill: string): void;
+  addSkill(skills: string[]): void;
+  addSkill(skillOrSkills: string | string[]): void {
+    if (typeof skillOrSkills === "string") this.skills.push(skillOrSkills);
+    if (
+      Array.isArray(skillOrSkills) &&
+      skillOrSkills.length != 0 &&
+      typeof skillOrSkills[0] === "string"
+    ) {
+      if (!this.skills) this.skills = [];
+      this.skills = this.skills.concat(skillOrSkills);
+    }
+  }
 }
 
 const myUser = new MyUser("Roma");
@@ -18,10 +33,15 @@ const myUser2 = new MyUser();
 const myUser3 = new MyUser("Roman", 37);
 const myUser4 = new MyUser(37);
 
-console.log(myUser2);
+myUser.addSkill(["dev", "devops"]);
 console.log(myUser);
-myUser.name = "Gretta";
+
+myUser.addSkill(["tester"]);
 console.log(myUser);
+
+myUser.addSkill("ks");
+console.log(myUser);
+
 
 class MyAdmin {
   role: string;
@@ -29,5 +49,3 @@ class MyAdmin {
 
 const myAdmin = new MyAdmin();
 myAdmin.role = "1";
-
-console.log(myAdmin);
