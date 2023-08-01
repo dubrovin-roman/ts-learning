@@ -1,7 +1,9 @@
 "use strict";
+var _MyUser_password;
 class MyUser {
     constructor(nameOrAge, age) {
         this.name = "default";
+        _MyUser_password.set(this, void 0);
         if (typeof nameOrAge === "string")
             this.name = nameOrAge;
         if (typeof nameOrAge === "number")
@@ -20,12 +22,21 @@ class MyUser {
             this.skills = this.skills.concat(skillOrSkills);
         }
     }
+    get login() {
+        return this._login;
+    }
+    set login(l) {
+        this._login = `user-${l}`;
+    }
 }
+_MyUser_password = new WeakMap();
 const myUser = new MyUser("Roma");
 const myUser2 = new MyUser();
 const myUser3 = new MyUser("Roman", 37);
 const myUser4 = new MyUser(37);
 myUser.addSkill(["dev", "devops"]);
+myUser.login = "roman";
+console.log(myUser.login);
 console.log(myUser);
 myUser.addSkill(["tester"]);
 console.log(myUser);

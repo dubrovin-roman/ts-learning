@@ -2,6 +2,8 @@ class MyUser {
   name: string = "default";
   age: number;
   skills: string[];
+  private _login: string;
+  #password: string;
 
   constructor();
   constructor(name: string);
@@ -26,6 +28,14 @@ class MyUser {
       this.skills = this.skills.concat(skillOrSkills);
     }
   }
+
+  get login(): string {
+    return this._login;
+  }
+
+  set login(l: string) {
+    this._login = `user-${l}`;
+  }
 }
 
 const myUser = new MyUser("Roma");
@@ -34,6 +44,8 @@ const myUser3 = new MyUser("Roman", 37);
 const myUser4 = new MyUser(37);
 
 myUser.addSkill(["dev", "devops"]);
+myUser.login = "roman";
+console.log(myUser.login);
 console.log(myUser);
 
 myUser.addSkill(["tester"]);
