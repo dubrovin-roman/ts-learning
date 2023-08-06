@@ -9,7 +9,7 @@ function getSplitedHalf(data) {
     const l = data.length;
     return data.splice(0, l);
 }
-// типизация функций generics
+// типизация функций generics, описание типов функций
 const split = getSplitedHalf;
 const logLine = {
     timeStamp: new Date(),
@@ -40,3 +40,18 @@ console.log(toString(true));
 console.log(toString(123.23));
 console.log(toString({ name: "Roman", surname: "Dubrovin" }));
 console.log(toString(null));
+const data = [
+    { id: 2, name: "Петя" },
+    { id: 1, name: "Вася" },
+    { id: 3, name: "Надя" },
+];
+function sortObjById(data, inAscendingOrder) {
+    if (inAscendingOrder) {
+        data.sort((obj1, obj2) => obj1.id - obj2.id);
+    }
+    else {
+        data.sort((obj1, obj2) => obj2.id - obj1.id);
+    }
+}
+sortObjById(data, false);
+console.log(data);

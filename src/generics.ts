@@ -56,3 +56,29 @@ console.log(toString<boolean>(true));
 console.log(toString<number>(123.23));
 console.log(toString<object>({ name: "Roman", surname: "Dubrovin" }));
 console.log(toString(null));
+
+// 7.7 Упражнение - Функция сортировки id
+interface IdContains {
+  id: number;
+}
+
+const data = [
+  { id: 2, name: "Петя" },
+  { id: 1, name: "Вася" },
+  { id: 3, name: "Надя" },
+];
+
+function sortObjById<T extends IdContains>(
+  data: Array<T>,
+  inAscendingOrder: boolean
+): void {
+  if (inAscendingOrder) {
+    data.sort((obj1, obj2) => obj1.id - obj2.id);
+  } else {
+    data.sort((obj1, obj2) => obj2.id - obj1.id);
+  }
+}
+
+sortObjById(data, false);
+
+console.log(data);
