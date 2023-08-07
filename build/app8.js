@@ -66,3 +66,26 @@ const user82 = {
 const userName = user82["name"];
 // преобразование массива с значениями к типу с летералами этих значений
 const roles = ["user", "admin", "super-user"];
+// conditional в перегрузке методов
+class UserClass {
+}
+class UserPersistenClass {
+}
+function getUser(idOrDbId) {
+    if (typeof idOrDbId === "number") {
+        return new UserClass();
+    }
+    else {
+        return new UserPersistenClass();
+    }
+}
+function getUserCond(idOrDbId) {
+    if (typeof idOrDbId === "number") {
+        return new UserClass();
+    }
+    else {
+        return new UserPersistenClass();
+    }
+}
+console.log(getUserCond(1));
+console.log(getUserCond("str"));
