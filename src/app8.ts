@@ -175,7 +175,56 @@ type UserAccess1 = {
 };
 
 type ModifierToAccess<Type> = {
-  +readonly [Property in keyof Type as `canAccess${string & Property}`]-?: boolean;
+  +readonly [Property in keyof Type as `canAccess${string &
+    Property}`]-?: boolean;
 };
 // как надо
 type UserAccess2 = ModifierToAccess<UserRoles>;
+
+// 8.9 Упражнение - Валидация форм
+// необходимо сделать тип для результата валидации формы, основываясь на типе формы
+
+interface IForm {
+  name: string;
+  password: string;
+}
+
+const form: IForm = {
+  name: "Roman",
+  password: "123",
+};
+
+type FormToValidation<T> = {
+  [Key in keyof T]:
+    | { isValid: true }
+    | { isValid: false; errorMessage: string };
+};
+
+const formValidation: FormToValidation<IForm> = {
+  name: { isValid: true },
+  password: { isValid: false, errorMessage: "Должен быть длиннее 5 символов" },
+};
+
+// 8.11 Template Literal Types
+
+type ReadOrWrite = "read" | "write";
+type Bulk = "bulk" | "";
+
+type Access = `can${Capitalize<ReadOrWrite>}${Capitalize<Bulk>}`;
+
+// реальный пример
+type ErrorOrSuccess = "error" | "success";
+
+type ResponseT = {
+  result: `http${Capitalize<ErrorOrSuccess>}`;
+};
+
+const res8: ResponseT = {
+  result: "httpSuccess",
+};
+
+// распаковка типа с помощью infer выделения типа, убираем "can"
+
+type ReadOrWriteBulk<T> = T extends `can${infer R}` ? R : never;
+
+type T = ReadOrWriteBulk<Access>;

@@ -89,3 +89,14 @@ function getUserCond(idOrDbId) {
 }
 console.log(getUserCond(1));
 console.log(getUserCond("str"));
+const form = {
+    name: "Roman",
+    password: "123",
+};
+const formValidation = {
+    name: { isValid: true },
+    password: { isValid: false, errorMessage: "Должен быть длиннее 5 символов" },
+};
+const res8 = {
+    result: "httpSuccess",
+};
