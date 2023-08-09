@@ -32,13 +32,11 @@ type ExcludeEx = Exclude<"from" | "to" | PaymentType, string>;
 // 9.4 ReturnType, Parameters, ConstructorParameters
 
 class User9 {
-    constructor(public id: number, public name: string) {
-
-    }
+  constructor(public id: number, public name: string) {}
 }
 
 function getUser9(id: number): User9 {
-    return new User9(id, "Roman");
+  return new User9(id, "Roman");
 }
 
 type RT = ReturnType<typeof getUser9>;
@@ -50,3 +48,23 @@ type PT = Parameters<typeof getUser9>;
 type PT1 = Parameters<typeof getUser9>[0];
 
 type CT = ConstructorParameters<typeof User9>;
+
+// 9.5 Awaited
+
+type A = Awaited<Promise<string>>;
+type A2 = Awaited<Promise<Promise<string>>>;
+
+interface IMenu {
+  name: string;
+  url: string;
+}
+
+async function getMenu(): Promise<IMenu[]> {
+  return [{ name: "Аналитика", url: "analiticks" }];
+}
+
+type R = Awaited<ReturnType<typeof getMenu>>;
+
+async function getArray<T>(params: T) : Promise<Awaited<T>[]>{
+  return [await params];
+}
