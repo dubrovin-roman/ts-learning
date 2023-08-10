@@ -5,6 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
@@ -17,6 +20,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+Object.defineProperty(exports, "__esModule", { value: true });
+require("reflect-metadata");
 //@nullUsersNum
 // @threeUsersAdvanced
 // @SetUsers(15)
@@ -82,10 +87,14 @@ class UserServiceNew {
     }
 }
 __decorate([
-    Max(100)
+    Max(100),
+    __metadata("design:type", Number)
 ], UserServiceNew.prototype, "usersNumber", void 0);
 __decorate([
-    LogError({ reThrow: false })
+    LogError({ reThrow: false }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Number)
 ], UserServiceNew.prototype, "getUsersNumInDB", null);
 function Log(target, propertyKey, descriptor) {
     console.log(target);
@@ -176,7 +185,9 @@ class UserServ {
     }
 }
 __decorate([
-    LogSet()
+    LogSet(),
+    __metadata("design:type", Number),
+    __metadata("design:paramtypes", [Number])
 ], UserServ.prototype, "usersNumber", null);
 function LogSet() {
     return (target, _, descriptor) => {
@@ -200,8 +211,12 @@ class UserServiceNew2 {
     }
 }
 __decorate([
-    __param(0, Positive())
+    __param(0, Positive()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", void 0)
 ], UserServiceNew2.prototype, "setUsersNumInDB", null);
 function Positive() {
     return (target, propertyKey, parameterIndex) => { };
 }
+// 10.11 Метаданные

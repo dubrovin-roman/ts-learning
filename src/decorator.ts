@@ -1,3 +1,5 @@
+import "reflect-metadata"
+
 interface IUserService {
   usersNumber: number;
   getUsersNumInDB(): number;
@@ -219,3 +221,6 @@ class UserServiceNew2 implements IUserService {
 function Positive() {
   return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {}
 }
+
+// 10.11 Метаданные
+
