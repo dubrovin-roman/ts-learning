@@ -5,6 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -79,7 +82,10 @@ class UserServiceNew {
     }
 }
 __decorate([
-    LogError({ reThrow: true })
+    Max(100)
+], UserServiceNew.prototype, "usersNumber", void 0);
+__decorate([
+    LogError({ reThrow: false })
 ], UserServiceNew.prototype, "getUsersNumInDB", null);
 function Log(target, propertyKey, descriptor) {
     console.log(target);
@@ -131,3 +137,71 @@ function LogError({ reThrow } = { reThrow: false }) {
     };
 }
 new UserServiceNew().getUsersNumInDB();
+// 10.8 Декоратор свойства
+function Max(maxValue) {
+    return (target, propertyKey) => {
+        let value;
+        const setter = function (newValue) {
+            if (newValue > maxValue) {
+                console.log(`Нельзя установить значение больше ${maxValue}`);
+            }
+            else {
+                value = newValue;
+            }
+        };
+        const getter = function () {
+            return value;
+        };
+        Object.defineProperty(target, propertyKey, {
+            set: setter,
+            get: getter,
+        });
+    };
+}
+const us = new UserServiceNew();
+us.usersNumber = 50;
+console.log(us.usersNumber);
+us.usersNumber = 200;
+console.log(us.usersNumber);
+// 10.9 Декоратор accessor
+class UserServ {
+    set usersNumber(num) {
+        this._usersNumber = num;
+    }
+    get usersNumber() {
+        return this._usersNumber;
+    }
+    getUsersNumInDB() {
+        throw new Error("Method not implemented.");
+    }
+}
+__decorate([
+    LogSet()
+], UserServ.prototype, "usersNumber", null);
+function LogSet() {
+    return (target, _, descriptor) => {
+        const setFun = descriptor.set;
+        descriptor.set = (...args) => {
+            console.log(`Setter объекта вызван с параметрами: ${args}`);
+            setFun === null || setFun === void 0 ? void 0 : setFun.apply(target, args);
+        };
+    };
+}
+const us1 = new UserServ();
+us1.usersNumber = 100;
+console.log(us1.usersNumber);
+// 10.10 Декоратор параметра
+class UserServiceNew2 {
+    getUsersNumInDB() {
+        return this.usersNumber;
+    }
+    setUsersNumInDB(num) {
+        this.usersNumber = num;
+    }
+}
+__decorate([
+    __param(0, Positive())
+], UserServiceNew2.prototype, "setUsersNumInDB", null);
+function Positive() {
+    return (target, propertyKey, parameterIndex) => { };
+}

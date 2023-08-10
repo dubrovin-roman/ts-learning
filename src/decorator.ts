@@ -64,10 +64,11 @@ function CreatedAt<T extends { new (...args: any[]): {} }>(constructor: T) {
 // 10.6 Декоратор метода
 
 class UserServiceNew implements IUserService {
+  @Max(100)
   usersNumber: number;
 
   // @Log
-  @LogError({ reThrow: true })
+  @LogError({ reThrow: false })
   getUsersNumInDB(): number {
     throw new Error("Method not implemented.");
   }
@@ -132,3 +133,89 @@ function LogError({ reThrow }: { reThrow: boolean } = { reThrow: false }) {
 }
 
 new UserServiceNew().getUsersNumInDB();
+
+// 10.8 Декоратор свойства
+
+function Max(maxValue: number) {
+  return (target: Object, propertyKey: string | symbol) => {
+    let value: number;
+
+    const setter = function (newValue: number) {
+      if (newValue > maxValue) {
+        console.log(`Нельзя установить значение больше ${maxValue}`);
+      } else {
+        value = newValue;
+      }
+    };
+
+    const getter = function () {
+      return value;
+    };
+
+    Object.defineProperty(target, propertyKey, {
+      set: setter,
+      get: getter,
+    });
+  };
+}
+
+const us = new UserServiceNew();
+us.usersNumber = 50;
+console.log(us.usersNumber);
+us.usersNumber = 200;
+console.log(us.usersNumber);
+
+// 10.9 Декоратор accessor
+
+class UserServ implements IUserService {
+  private _usersNumber: number;
+
+  @LogSet()
+  set usersNumber(num: number) {
+    this._usersNumber = num;
+  }
+
+  get usersNumber() {
+    return this._usersNumber;
+  }
+
+  getUsersNumInDB(): number {
+    throw new Error("Method not implemented.");
+  }
+}
+
+function LogSet() {
+  return (
+    target: Object,
+    _: string | symbol,
+    descriptor: PropertyDescriptor
+  ) => {
+    const setFun = descriptor.set;
+    descriptor.set = (...args: any) => {
+      console.log(`Setter объекта вызван с параметрами: ${args}`);
+      setFun?.apply(target, args);
+    }
+  };
+}
+
+const us1 = new UserServ();
+us1.usersNumber = 100;
+console.log(us1.usersNumber);
+
+// 10.10 Декоратор параметра
+
+class UserServiceNew2 implements IUserService {
+  usersNumber: number;
+
+  getUsersNumInDB(): number {
+    return this.usersNumber;
+  }
+  
+  setUsersNumInDB(@Positive() num: number): void {
+    this.usersNumber = num;
+  }
+}
+
+function Positive() {
+  return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {}
+}
