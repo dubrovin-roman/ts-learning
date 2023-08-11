@@ -1,4 +1,4 @@
-import "reflect-metadata"
+import "reflect-metadata";
 
 interface IUserService {
   usersNumber: number;
@@ -196,7 +196,7 @@ function LogSet() {
     descriptor.set = (...args: any) => {
       console.log(`Setter объекта вызван с параметрами: ${args}`);
       setFun?.apply(target, args);
-    }
+    };
   };
 }
 
@@ -206,21 +206,74 @@ console.log(us1.usersNumber);
 
 // 10.10 Декоратор параметра
 
+// создаем ключ для своих метаданных
+const POSITIVE_METADATA_KEY = Symbol("POSITIVE_METADATA_KEY");
+
 class UserServiceNew2 implements IUserService {
   usersNumber: number;
 
   getUsersNumInDB(): number {
     return this.usersNumber;
   }
-  
+
+  @Validate()
   setUsersNumInDB(@Positive() num: number): void {
     this.usersNumber = num;
   }
 }
 
 function Positive() {
-  return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {}
+  return (
+    target: Object,
+    propertyKey: string | symbol,
+    parameterIndex: number
+  ) => {
+    // получаем метаданные
+    console.log(Reflect.getOwnMetadata("design:type", target, propertyKey));
+    console.log(
+      Reflect.getOwnMetadata("design:paramtypes", target, propertyKey)
+    );
+    console.log(
+      Reflect.getOwnMetadata("design:returntype", target, propertyKey)
+    );
+    // создаем свои метаданные
+    let existParam: number[] =
+      Reflect.getOwnMetadata(POSITIVE_METADATA_KEY, target, propertyKey) || [];
+    existParam.push(parameterIndex);
+    Reflect.defineMetadata(
+      POSITIVE_METADATA_KEY,
+      existParam,
+      target,
+      propertyKey
+    );
+  };
 }
 
 // 10.11 Метаданные
+// делаем валидатор на основе добавленных нами метаданных
+function Validate() {
+  return (
+    target: Object,
+    propertyKey: string | symbol,
+    descriptor: TypedPropertyDescriptor<(...args: any[]) => any>
+  ): TypedPropertyDescriptor<(...args: any[]) => any> | void => {
+    const method = descriptor.value;
+    descriptor.value = function (...args: any) {
+      const positiveParam: number[] = Reflect.getOwnMetadata(
+        POSITIVE_METADATA_KEY,
+        target,
+        propertyKey
+      );
+      for (let index of positiveParam) {
+        if (args[index] <= 0) throw new Error("Число должно быть больше нуля")
+      }
+      return method?.apply(target, args);
+    }
+  };
+}
 
+const usn2 = new UserServiceNew2();
+usn2.setUsersNumInDB(10);
+console.log(usn2.getUsersNumInDB());
+usn2.setUsersNumInDB(30);
+console.log(usn2.getUsersNumInDB());

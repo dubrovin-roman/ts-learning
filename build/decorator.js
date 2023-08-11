@@ -202,6 +202,8 @@ const us1 = new UserServ();
 us1.usersNumber = 100;
 console.log(us1.usersNumber);
 // 10.10 Декоратор параметра
+// создаем ключ для своих метаданных
+const POSITIVE_METADATA_KEY = Symbol("POSITIVE_METADATA_KEY");
 class UserServiceNew2 {
     getUsersNumInDB() {
         return this.usersNumber;
@@ -211,12 +213,41 @@ class UserServiceNew2 {
     }
 }
 __decorate([
+    Validate(),
     __param(0, Positive()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", void 0)
 ], UserServiceNew2.prototype, "setUsersNumInDB", null);
 function Positive() {
-    return (target, propertyKey, parameterIndex) => { };
+    return (target, propertyKey, parameterIndex) => {
+        // получаем метаданные
+        console.log(Reflect.getOwnMetadata("design:type", target, propertyKey));
+        console.log(Reflect.getOwnMetadata("design:paramtypes", target, propertyKey));
+        console.log(Reflect.getOwnMetadata("design:returntype", target, propertyKey));
+        // создаем свои метаданные
+        let existParam = Reflect.getOwnMetadata(POSITIVE_METADATA_KEY, target, propertyKey) || [];
+        existParam.push(parameterIndex);
+        Reflect.defineMetadata(POSITIVE_METADATA_KEY, existParam, target, propertyKey);
+    };
 }
 // 10.11 Метаданные
+// делаем валидатор на основе добавленных нами метаданных
+function Validate() {
+    return (target, propertyKey, descriptor) => {
+        const method = descriptor.value;
+        descriptor.value = function (...args) {
+            const positiveParam = Reflect.getOwnMetadata(POSITIVE_METADATA_KEY, target, propertyKey);
+            for (let index of positiveParam) {
+                if (args[index] <= 0)
+                    throw new Error("Число должно быть больше нуля");
+            }
+            return method === null || method === void 0 ? void 0 : method.apply(target, args);
+        };
+    };
+}
+const usn2 = new UserServiceNew2();
+usn2.setUsersNumInDB(10);
+console.log(usn2.getUsersNumInDB());
+usn2.setUsersNumInDB(30);
+console.log(usn2.getUsersNumInDB());
